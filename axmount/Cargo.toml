@@ -18,13 +18,13 @@ default = ["devfs", "ramfs", "fatfs", "procfs", "sysfs"]
 [dependencies]
 log = "0.4"
 cfg-if = "1.0"
-axdriver = { path = "../axdriver", features = ["block"] }
-fstree = { path = "../fstree" }
-mutex = { path = "../mutex" }
-axfs_devfs = { path = "../../crates/axfs_devfs", optional = true }
-axfs_ramfs = { path = "../../crates/axfs_ramfs", optional = true }
-axfs_vfs = { path = "../../crates/axfs_vfs" }
-lazy_init = { path = "../../crates/lazy_init" }
+axdriver = { git = "ssh://git@github.com/shilei-massclouds/axdriver.git", features = ["block"] }
+fstree = { git = "ssh://git@github.com/shilei-massclouds/fstree.git" }
+mutex = { git = "ssh://git@github.com/shilei-massclouds/mutex.git" }
+axfs_devfs = { git = "ssh://git@github.com/shilei-massclouds/axfs_devfs.git" }
+axfs_ramfs = { git = "ssh://git@github.com/shilei-massclouds/axfs_ramfs.git" }
+axfs_vfs = { git = "ssh://git@github.com/shilei-massclouds/axfs_vfs.git" }
+lazy_init = { git = "ssh://git@github.com/shilei-massclouds/lazy_init.git" }
 
 [dependencies.fatfs]
 git = "https://github.com/rafalh/rust-fatfs"
