@@ -6,11 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-devfs = ["dep:axfs_devfs"]
-ramfs = ["dep:axfs_ramfs"]
-procfs = ["dep:axfs_ramfs"]
-sysfs = ["dep:axfs_ramfs"]
-fatfs = ["dep:fatfs"]
+devfs = []
+ramfs = []
+procfs = []
+sysfs = []
+fatfs = []
 use-ramdisk = []
 
 default = ["devfs", "ramfs", "fatfs", "procfs", "sysfs"]
@@ -18,22 +18,11 @@ default = ["devfs", "ramfs", "fatfs", "procfs", "sysfs"]
 [dependencies]
 log = "0.4"
 cfg-if = "1.0"
-axdriver = { git = "ssh://git@github.com/shilei-massclouds/axdriver.git", features = ["block"] }
+axdriver = { git = "ssh://git@github.com/shilei-massclouds/axdriver.git" }
 fstree = { git = "ssh://git@github.com/shilei-massclouds/fstree.git" }
 mutex = { git = "ssh://git@github.com/shilei-massclouds/mutex.git" }
 axfs_devfs = { git = "ssh://git@github.com/shilei-massclouds/axfs_devfs.git" }
 axfs_ramfs = { git = "ssh://git@github.com/shilei-massclouds/axfs_ramfs.git" }
 axfs_vfs = { git = "ssh://git@github.com/shilei-massclouds/axfs_vfs.git" }
 lazy_init = { git = "ssh://git@github.com/shilei-massclouds/lazy_init.git" }
-
-[dependencies.fatfs]
-git = "https://github.com/rafalh/rust-fatfs"
-rev = "a3a834e"
-optional = true
-default-features = false
-features = [ # no std
-    "alloc",
-    "lfn",
-    "log_level_trace",
-    "unicode",
-]
+rust_fatfs = { git = "ssh://git@github.com/shilei-massclouds/rust_fatfs.git" }

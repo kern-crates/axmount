@@ -1,6 +1,7 @@
 use alloc::sync::Arc;
 use core::cell::UnsafeCell;
 
+use rust_fatfs as fatfs;
 use axfs_vfs::{VfsDirEntry, VfsError, VfsNodePerm, VfsResult};
 use axfs_vfs::{VfsNodeAttr, VfsNodeOps, VfsNodeRef, VfsNodeType, VfsOps};
 use fatfs::{Dir, File, LossyOemCpConverter, NullTimeProvider, Read, Seek, SeekFrom, Write};
@@ -28,6 +29,17 @@ unsafe impl<'a> Sync for DirWrapper<'a> {}
 impl FatFileSystem {
     #[cfg(feature = "use-ramdisk")]
     pub fn new(mut disk: Disk) -> Self {
+        let opts = fatfs::FormatVolumeOptions::new();
+        fatfs::format_volume(&mut disk, opts).expect("failed to format volume");
+        let inner = fatfs::FileSystem::new(disk, fatfs::FsOptions::new())
+            .expect("failed to initialize FAT filesystem");
+        Self {
+            inner,
+            root_dir: UnsafeCell::new(None),
+        }
+    }
+
+    pub fn new_with_format(mut disk: Disk) -> Self {
         let opts = fatfs::FormatVolumeOptions::new();
         fatfs::format_volume(&mut disk, opts).expect("failed to format volume");
         let inner = fatfs::FileSystem::new(disk, fatfs::FsOptions::new())

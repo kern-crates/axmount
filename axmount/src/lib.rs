@@ -36,7 +36,7 @@ pub fn init_filesystems(mut blk_devs: AxDeviceContainer<AxBlockDevice>) -> FsTyp
             let main_fs = fs::myfs::new_myfs(disk);
         } else if #[cfg(feature = "fatfs")] {
             static FAT_FS: LazyInit<Arc<fs::fatfs::FatFileSystem>> = LazyInit::new();
-            FAT_FS.init_by(Arc::new(fs::fatfs::FatFileSystem::new(disk)));
+            FAT_FS.init_by(Arc::new(fs::fatfs::FatFileSystem::new_with_format(disk)));
             FAT_FS.init();
             let main_fs = FAT_FS.clone();
         }
