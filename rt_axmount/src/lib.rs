@@ -35,7 +35,7 @@ pub extern "Rust" fn runtime_main(cpu_id: usize, _dtb_pa: usize) {
         let mut disk = ramdisk::RamDisk::new(0x10000);
         let mut disk = AxDeviceContainer::from_one(disk);
 
-        let main_fs = axmount::init_filesystems(disk);
+        let main_fs = axmount::init_filesystems(disk, true);
         let root_dir = axmount::init_rootfs(main_fs);
     }
 

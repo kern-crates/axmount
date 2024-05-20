@@ -39,19 +39,12 @@ impl FatFileSystem {
         }
     }
 
-    pub fn new_with_format(mut disk: Disk) -> Self {
-        let opts = fatfs::FormatVolumeOptions::new();
-        fatfs::format_volume(&mut disk, opts).expect("failed to format volume");
-        let inner = fatfs::FileSystem::new(disk, fatfs::FsOptions::new())
-            .expect("failed to initialize FAT filesystem");
-        Self {
-            inner,
-            root_dir: UnsafeCell::new(None),
-        }
-    }
-
     #[cfg(not(feature = "use-ramdisk"))]
-    pub fn new(disk: Disk) -> Self {
+    pub fn new(mut disk: Disk, need_fmt: bool) -> Self {
+        if need_fmt {
+            let opts = fatfs::FormatVolumeOptions::new();
+            fatfs::format_volume(&mut disk, opts).expect("failed to format volume");
+        }
         let inner = fatfs::FileSystem::new(disk, fatfs::FsOptions::new())
             .expect("failed to initialize FAT filesystem");
         Self {
