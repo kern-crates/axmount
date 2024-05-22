@@ -37,7 +37,8 @@ pub extern "Rust" fn runtime_main(cpu_id: usize, _dtb_pa: usize) {
     }
 
     // Init runq just for using mutex.
-    run_queue::init();
+    let idle = task::init();
+    run_queue::init(idle);
 
     {
         //let mut disk = ramdisk::RamDisk::new(0x10000);
