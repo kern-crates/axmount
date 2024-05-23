@@ -11,6 +11,9 @@ use driver_block::{ramdisk, BlockDriverOps};
 use axdriver::{prelude::*, AxDeviceContainer};
 use axhal::mem::memory_regions;
 use fstree::FsStruct;
+use axfile::api::File;
+use axfile::api::OpenOptions;
+use axio::{Seek, SeekFrom, Read};
 
 /// Entry
 #[no_mangle]
@@ -50,16 +53,16 @@ pub extern "Rust" fn runtime_main(cpu_id: usize, _dtb_pa: usize) {
         let root_dir = axmount::init_rootfs(main_fs);
         let mut fs = FsStruct::new();
         fs.init(root_dir);
-        axfile::api::create_dir("/testcases", &fs).unwrap();
 
-        let fname = "/testcases/new-file.txt";
-        info!("test create file {:?}:", fname);
-        //assert_err!(axfile::api::metadata(fname), NotFound);
-        let contents = "create a new file!\n";
-        axfile::api::write(fname, contents, &fs).unwrap();
+        let filename = "/lib64/ld-linux-x86-64.so.2";
+        let mut file = File::open(filename, &fs).unwrap();
 
-        let ret = axfile::api::read_to_string(fname, &fs).unwrap();
-        info!("read test file: \"{}\"", ret);
+        let mut buf: [u8; 512] = [0u8; 512];
+        let offset = 0x2200;
+        let _ = file.seek(SeekFrom::Start(offset as u64));
+        let ret = file.read(&mut buf).unwrap();
+        info!("*** READ: [{}]", ret);
+        info!("*** READ: {:#X} {:#X} {:#X} {:#X}", buf[0x4a], buf[0x4b], buf[0x4c], buf[0x4d]);
     }
 
     info!("[rt_axmount]: ok!");
